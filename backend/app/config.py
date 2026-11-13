@@ -25,6 +25,8 @@ class Config:
     DB_NAME = os.getenv("DB_NAME", "vemavaram_csp")
     DB_USER = os.getenv("DB_USER", "root")
     DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+    DB_SSL_CA = os.getenv("DB_SSL_CA", None)
+    DB_SSL_MODE = os.getenv("DB_SSL_MODE", None)
 
     # Cloudinary (image storage for complaints and resolution photos)
     CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME", "")

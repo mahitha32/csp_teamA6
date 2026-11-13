@@ -22,20 +22,29 @@ def get_db():
     try:
         if _db_connection is None or not _db_connection.open:
             raise Exception("Not connected")
-        _db_connection.ping(reconnect=True)
+        _db_connection.ping()
     except Exception:
         from flask import current_app
         cfg = current_app.config
-        _db_connection = pymysql.connect(
-            host=cfg["DB_HOST"],
-            port=cfg["DB_PORT"],
-            user=cfg["DB_USER"],
-            password=cfg["DB_PASSWORD"],
-            database=cfg["DB_NAME"],
-            charset="utf8mb4",
-            cursorclass=pymysql.cursors.DictCursor,
-            autocommit=False,
-        )
+        connect_kwargs = {
+            "host": cfg["DB_HOST"],
+            "port": cfg["DB_PORT"],
+            "user": cfg["DB_USER"],
+            "password": cfg["DB_PASSWORD"],
+            "database": cfg["DB_NAME"],
+            "charset": "utf8mb4",
+            "cursorclass": pymysql.cursors.DictCursor,
+            "autocommit": False,
+        }
+        ssl_config = {}
+        if cfg.get("DB_SSL_CA"):
+            ssl_config["ca"] = cfg["DB_SSL_CA"]
+        if cfg.get("DB_SSL_MODE"):
+            ssl_config["ssl_mode"] = cfg["DB_SSL_MODE"]
+        if ssl_config:
+            connect_kwargs["ssl"] = ssl_config
+
+        _db_connection = pymysql.connect(**connect_kwargs)
     return _db_connection
 
 

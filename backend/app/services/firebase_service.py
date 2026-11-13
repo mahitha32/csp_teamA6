@@ -24,11 +24,26 @@ def _init_firebase():
     try:
         import firebase_admin
         from firebase_admin import credentials
+        import json
     except ImportError:
         raise RuntimeError(
             "firebase_admin package is not installed. Install it with: pip install firebase-admin"
         )
 
+    # 1. Check for inline JSON string in environment variable
+    raw_json = os.getenv("FIREBASE_CREDENTIALS_JSON") or current_app.config.get("FIREBASE_CREDENTIALS_JSON")
+    if raw_json:
+        try:
+            cred_dict = json.loads(raw_json) if isinstance(raw_json, str) else raw_json
+            cred = credentials.Certificate(cred_dict)
+            if not firebase_admin._apps:
+                firebase_admin.initialize_app(cred)
+            _firebase_initialized = True
+            return
+        except Exception as e:
+            raise ValueError(f"Failed to parse FIREBASE_CREDENTIALS_JSON: {e}")
+
+    # 2. Check for credentials file path
     cred_path = current_app.config.get(
         "FIREBASE_CREDENTIALS_PATH", "firebase_credentials.json"
     )
