@@ -29,9 +29,17 @@ class Config:
     DB_SSL_MODE = os.getenv("DB_SSL_MODE", None)
 
     # Cloudinary (image storage for complaints and resolution photos)
+    CLOUDINARY_URL        = os.getenv("CLOUDINARY_URL", "")
     CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME", "")
     CLOUDINARY_API_KEY    = os.getenv("CLOUDINARY_API_KEY", "")
     CLOUDINARY_API_SECRET = os.getenv("CLOUDINARY_API_SECRET", "")
+
+    if CLOUDINARY_URL and not CLOUDINARY_CLOUD_NAME:
+        import urllib.parse
+        _c_parsed = urllib.parse.urlparse(CLOUDINARY_URL)
+        CLOUDINARY_CLOUD_NAME = _c_parsed.hostname or ""
+        CLOUDINARY_API_KEY    = _c_parsed.username or ""
+        CLOUDINARY_API_SECRET = _c_parsed.password or ""
 
     # Firebase (Phone Auth token verification only — NOT used for image storage)
     FIREBASE_CREDENTIALS_PATH = os.getenv("FIREBASE_CREDENTIALS_PATH", "firebase_credentials.json")

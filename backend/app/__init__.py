@@ -39,8 +39,10 @@ def get_db():
         ssl_config = {}
         if cfg.get("DB_SSL_CA"):
             ssl_config["ca"] = cfg["DB_SSL_CA"]
-        if cfg.get("DB_SSL_MODE"):
-            ssl_config["ssl_mode"] = cfg["DB_SSL_MODE"]
+        elif cfg.get("DB_SSL_MODE") or ("tidbcloud.com" in str(cfg.get("DB_HOST", ""))):
+            import certifi
+            ssl_config["ca"] = certifi.where()
+
         if ssl_config:
             connect_kwargs["ssl"] = ssl_config
 

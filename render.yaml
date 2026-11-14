@@ -18,19 +18,21 @@ services:
       - key: JWT_SECRET_KEY
         generateValue: true
       - key: DB_HOST
-        sync: false
+        value: gateway01.ap-southeast-1.prod.aws.tidbcloud.com
       - key: DB_PORT
-        value: "3306"
+        value: "4000"
       - key: DB_NAME
-        sync: false
+        value: vemavaram_csp
       - key: DB_USER
-        sync: false
+        value: 2gTwxEHDidZGkwa.root
       - key: DB_PASSWORD
         sync: false
+      - key: DB_SSL_MODE
+        value: REQUIRED
       - key: CLOUDINARY_CLOUD_NAME
-        sync: false
+        value: vslqythf
       - key: CLOUDINARY_API_KEY
-        sync: false
+        value: "114721286415457"
       - key: CLOUDINARY_API_SECRET
         sync: false
       - key: ALLOWED_ORIGINS
